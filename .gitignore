@@ -1,0 +1,8 @@
+*.o
+*.dSYM
+*.csv
+*.out
+*.pyc
+.fuse*
+libuwimg*
+uwimg

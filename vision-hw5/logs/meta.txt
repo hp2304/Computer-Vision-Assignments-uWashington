@@ -1,0 +1,5 @@
+Files are in chronological order (Shown below 1 to 4). All these models are trained for 5 epochs.
+1) LazyNet
+2) BoringNet
+3) CoolNet without data augmentation
+4) CoolNet with data augmentation

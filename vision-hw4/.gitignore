@@ -1,0 +1,11 @@
+cifar/
+train/
+test/
+cifar.test
+cifar.train
+cifar.tgz
+mnist.train
+mnist.test
+mnist.labels
+mnist_test.tar.gz
+mnist_train.tar.gz
