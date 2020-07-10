@@ -12,7 +12,7 @@ I loved this course. Assignments are about to build an **image processing librar
 * Apply projective transform on image. For example,
 
 given this input image and four corner point coordinates,
-![Input image](vision-hw4/new_board.jpg)
+![Input image](vision-hw4/data/new_board.jpg)
 
 generate this output image
 ![Output image](vision-hw4/proj_resized1.jpg)
