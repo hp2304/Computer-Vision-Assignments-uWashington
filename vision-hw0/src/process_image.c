@@ -35,8 +35,7 @@ image copy_image(image im)
     int nbPixels = im.w * im.h * im.c;
     image copy = make_image(im.w, im.h, im.c);
     // TODO Fill this in
-    for(int i = 0; i < nbPixels; ++i)
-        *(copy.data + i) = *(im.data + i);
+    memcpy(copy.data, im.data, nbPixels * sizeof(im.data[0]));
     return copy;
 }
 

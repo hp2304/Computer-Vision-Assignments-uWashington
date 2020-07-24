@@ -199,6 +199,8 @@ point project_point(matrix H, point p)
     // Have to divide by.... something...
     c = matrix_mult_matrix(H, hm_p);
     point q = make_point(c.data[0][0]/c.data[2][0], c.data[1][0]/c.data[2][0]);
+    free_matrix(c);
+    free_matrix(hm_p);
     return q;
 }
 
@@ -343,6 +345,10 @@ matrix RANSAC(match *m, int n, float thresh, int k, int cutoff)
     //         if it's better than the cutoff:
     //             return it immediately
     // if we get to the end return the best homography
+
+    // Personal Comment: H must be freed (deallocate memory which is not required)
+    // This code might cause heap overflow if k is too large.
+    // While do take care of Hb, because Hb = H assignment (copying pointer).
     matrix H;
     int nb_inliers;
     for(e = 0; e<k; ++e){
@@ -353,6 +359,7 @@ matrix RANSAC(match *m, int n, float thresh, int k, int cutoff)
         }
         nb_inliers = model_inliers(H, m, n, thresh);
         if(nb_inliers > best){
+            free_matrix(H);
             H = compute_homography(m, nb_inliers);
             if(H.cols == 0 || H.rows == 0){
                 continue;
@@ -361,6 +368,9 @@ matrix RANSAC(match *m, int n, float thresh, int k, int cutoff)
             best = model_inliers(Hb, m, n, thresh);
             if(best > cutoff)
                 return Hb;
+        }
+        else{
+            free_matrix(H);
         }
     }
     return Hb;
@@ -430,7 +440,7 @@ image combine_images(image a, image b, matrix H)
             }
         }
     }
-
+    free_matrix(Hinv);
     return c;
 }
 

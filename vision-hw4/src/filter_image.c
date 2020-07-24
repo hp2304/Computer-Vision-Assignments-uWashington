@@ -263,8 +263,9 @@ image *sobel_image(image im)
 {
     // TODO
     image mag = make_image(im.w, im.h, 1), theta = make_image(im.w, im.h, 1);
-    image image_gx = convolve_image(im, make_gx_filter(), 0);
-    image image_gy = convolve_image(im, make_gy_filter(), 0);
+    image gx = make_gx_filter(), gy = make_gy_filter();
+    image image_gx = convolve_image(im, gx, 0);
+    image image_gy = convolve_image(im, gy, 0);
     float val;
     for(int i=0; i<im.w; ++i){
         for(int j=0; j<im.h; ++j){
@@ -277,6 +278,10 @@ image *sobel_image(image im)
     image *sobel = calloc(2, sizeof(image));
     sobel[0] = mag;
     sobel[1] = theta;
+    free_image(gx);
+    free_image(gy);
+    free_image(image_gx);
+    free_image(image_gy);
     return sobel;
 }
 
@@ -289,14 +294,14 @@ image colorize_sobel(image im)
     feature_normalize(sobel[1]);
     for(int i=0; i<im.w; ++i){
         for(int j=0; j<im.h; ++j){
+            set_pixel(out, i, j, 0, get_pixel(sobel[1], i, j, 0));
             set_pixel(out, i, j, 1, get_pixel(sobel[0], i, j, 0));
             set_pixel(out, i, j, 2, get_pixel(sobel[0], i, j, 0));
         }
     }
-    for(int i=0; i<im.w; ++i){
-        for(int j=0; j<im.h; ++j)
-            set_pixel(out, i, j, 0, get_pixel(sobel[1], i, j, 0));
-    }
     hsv_to_rgb(out);
+    free_image(sobel[0]);
+    free_image(sobel[1]);
+    free(sobel);
     return out;
 }

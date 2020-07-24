@@ -105,7 +105,6 @@ image box_filter_image(image im, int s)
         }
     }
     free_image(integ);
-    free_image(im);
     return S;
 }
 
@@ -126,7 +125,8 @@ image time_structure_matrix(image im, image prev, int s)
     }
 
     // TODO: calculate gradients, structure components, and smooth them
-    image Ix = convolve_image(im, make_gx_filter(), 1), Iy = convolve_image(im, make_gy_filter(), 1);
+    image gx = make_gx_filter(), gy = make_gy_filter();
+    image Ix = convolve_image(im, gx, 1), Iy = convolve_image(im, gy, 1);
     image S = make_image(im.w, im.h, 5);
     float it, ix, iy;
     for(i=0; i<im.w; ++i){
@@ -144,7 +144,13 @@ image time_structure_matrix(image im, image prev, int s)
     if(converted){
         free_image(im); free_image(prev);
     }
-    return box_filter_image(S, s);
+    image t_s = box_filter_image(S, s);
+    free_image(S);
+    free_image(gx);
+    free_image(gy);
+    free_image(Ix);
+    free_image(Iy);
+    return t_s;
 }
 
 // Calculate the velocity given a structure image
@@ -154,7 +160,7 @@ image velocity_image(image S, int stride)
 {
     image v = make_image(S.w/stride, S.h/stride, 3);
     int i, j;
-    matrix M = make_matrix(2,2);
+    matrix M = make_matrix(2,2), M_inv = make_matrix(2,2);
 
     for(j = (stride-1)/2; j < S.h; j += stride){
         for(i = (stride-1)/2; i < S.w; i += stride){
@@ -171,8 +177,9 @@ image velocity_image(image S, int stride)
             M.data[0][1] = Ixy;
             M.data[1][0] = Ixy;
             M.data[1][1] = Iyy;
-            matrix M_inv = matrix_invert(M);
+            M_inv = matrix_invert(M);
             if(M_inv.rows == 0 || M_inv.cols == 0){
+                // M could be non-invertible due to flat surface.
                 continue;
             }
             vx = M_inv.data[0][0]*Ixt + M_inv.data[0][1]*Iyt;
@@ -183,6 +190,7 @@ image velocity_image(image S, int stride)
         }
     }
     free_matrix(M);
+    free_matrix(M_inv);
     return v;
 }
 

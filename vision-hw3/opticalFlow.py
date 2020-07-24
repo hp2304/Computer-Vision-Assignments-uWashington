@@ -11,7 +11,7 @@ prev = prev/255.
 
 h, w = prev_gray.shape
 print(w, h)
-stride = 19
+stride = 13
 while(True):
     ret, im = cap.read()
     im_gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)/255.

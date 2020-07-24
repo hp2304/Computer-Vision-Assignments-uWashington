@@ -147,7 +147,8 @@ image structure_matrix(image im, float sigma)
 {
     image S = make_image(im.w, im.h, 3);
     // TODO: calculate structure matrix for im.
-    image Ix = convolve_image(im, make_gx_filter(), 0), Iy = convolve_image(im, make_gy_filter(), 0);
+    image gx = make_gx_filter(), gy = make_gy_filter();
+    image Ix = convolve_image(im, gx, 0), Iy = convolve_image(im, gy, 0);
     for(int i=0; i<im.w; ++i){
         for(int j=0; j<im.h; ++j){
             set_pixel(S, i, j, 0, pow(get_pixel(Ix, i, j, 0), 2));
@@ -155,8 +156,13 @@ image structure_matrix(image im, float sigma)
             set_pixel(S, i, j, 2, get_pixel(Ix, i, j, 0)*get_pixel(Iy, i, j, 0));
         }
     }
-    image res = smooth_image(S, sigma);
-    return res;
+    image weighted_S = smooth_image(S, sigma);
+    free_image(gx);
+    free_image(gy);
+    free_image(Ix);
+    free_image(Iy);
+    free_image(S);
+    return weighted_S;
 }
 
 // Estimate the cornerness of each pixel given a structure matrix S.

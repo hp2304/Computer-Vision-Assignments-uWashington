@@ -125,5 +125,12 @@ hog_out get_hog_features(image im){
 
         }
     }
+    for(int i=0; i<16; ++i){
+        for(int j=0; j<8; ++j)
+            free(cell_hists[i][j]);
+    }
+    free_image(grad_info[0]);
+    free_image(grad_info[1]);
+    free(grad_info);
     return hog_features;
 }
