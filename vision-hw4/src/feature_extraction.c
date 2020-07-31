@@ -64,42 +64,9 @@ hog_out get_hog_features(image im){
                 for(int x = i; x<(i+8); ++x){
                     angle = get_pixel(grad_info[1], x, y, 0);
                     angle = abs((180/M_PI)*angle);
-                    if(angle >= 160){
-                       cell_hists[j/8][i/8][8] += ((180-angle)/20)*get_pixel(grad_info[0], x, y, 0);
-                       cell_hists[j/8][i/8][0] += ((angle - 160)/20)*get_pixel(grad_info[0], x, y, 0);
-                    }
-                    else if(angle >= 140){
-                       cell_hists[j/8][i/8][7] += ((160-angle)/20)*get_pixel(grad_info[0], x, y, 0);
-                       cell_hists[j/8][i/8][8] += ((angle - 140)/20)*get_pixel(grad_info[0], x, y, 0);
-                    }
-                    else if(angle >= 120){
-                       cell_hists[j/8][i/8][6] += ((140-angle)/20)*get_pixel(grad_info[0], x, y, 0);
-                       cell_hists[j/8][i/8][7] += ((angle - 120)/20)*get_pixel(grad_info[0], x, y, 0);
-                    }
-                    else if(angle >= 100){
-                       cell_hists[j/8][i/8][5] += ((120-angle)/20)*get_pixel(grad_info[0], x, y, 0);
-                       cell_hists[j/8][i/8][6] += ((angle - 100)/20)*get_pixel(grad_info[0], x, y, 0);
-                    }
-                    else if(angle >= 80){
-                       cell_hists[j/8][i/8][4] += ((100-angle)/20)*get_pixel(grad_info[0], x, y, 0);
-                       cell_hists[j/8][i/8][5] += ((angle - 80)/20)*get_pixel(grad_info[0], x, y, 0);
-                    }
-                    else if(angle >= 60){
-                       cell_hists[j/8][i/8][3] += ((80-angle)/20)*get_pixel(grad_info[0], x, y, 0);
-                       cell_hists[j/8][i/8][4] += ((angle - 60)/20)*get_pixel(grad_info[0], x, y, 0);
-                    }
-                    else if(angle >= 40){
-                       cell_hists[j/8][i/8][2] += ((60-angle)/20)*get_pixel(grad_info[0], x, y, 0);
-                       cell_hists[j/8][i/8][3] += ((angle - 40)/20)*get_pixel(grad_info[0], x, y, 0);
-                    }
-                    else if(angle >= 20){
-                       cell_hists[j/8][i/8][1] += ((40-angle)/20)*get_pixel(grad_info[0], x, y, 0);
-                       cell_hists[j/8][i/8][2] += ((angle - 20)/20)*get_pixel(grad_info[0], x, y, 0);
-                    }
-                    else{
-                       cell_hists[j/8][i/8][0] += ((20-angle)/20)*get_pixel(grad_info[0], x, y, 0);
-                       cell_hists[j/8][i/8][1] += ((angle - 0)/20)*get_pixel(grad_info[0], x, y, 0);
-                    }
+                    int temp = (int)(angle/20);
+                    cell_hists[j/8][i/8][temp] += (((float)((temp+1)*20)-angle)/20)*get_pixel(grad_info[0], x, y, 0);
+                    cell_hists[j/8][i/8][(temp+1)%9] += ((angle - (float)(temp*20))/20)*get_pixel(grad_info[0], x, y, 0);
                 }
             }
         }

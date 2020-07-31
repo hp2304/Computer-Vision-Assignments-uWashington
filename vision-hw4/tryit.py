@@ -2,15 +2,15 @@ from uwimg import *
 # import cv2
 # import matplotlib.pyplot as plt
 
-# im = load_image("data/ron.png")
+im = load_image("data/ron.png")
 # out = get_lbph_features(im, 1, 8, 8)
 # save_image(out.lbp_im, "lbp")
 
-# res = bilinear_resize(im, 300, 600)
-# out = get_hog_features(res)
-# print(out.n)
-# for i in range(out.n):
-#     print(out.data[i])
+res = bilinear_resize(im, 300, 600)
+out = get_hog_features(res)
+print(out.n)
+for i in range(out.n):
+    print(out.data[i])
 
 # img_path = "data/new_board.jpg"
 # img = cv2.imread(img_path)
@@ -19,11 +19,11 @@ from uwimg import *
 # plt.imshow(img)
 # plt.show()
 # exit()
-img_path = "data/new_board.jpg"
-im = load_image(img_path)
-out = projective_resize(im, 5, 38, 930, 140, 25, 710, 890, 610) # new_board
-save_image(out, "proj_resized1")
-img_path = "data/new_book.jpg"
-im = load_image(img_path)
-out = projective_resize(im, 155, 108, 578, 121, 160, 375, 550, 370) # new_book
-save_image(out, "proj_resized2")
+# img_path = "data/new_board.jpg"
+# im = load_image(img_path)
+# out = projective_resize(im, 5, 38, 930, 140, 25, 710, 890, 610) # new_board
+# save_image(out, "proj_resized1")
+# img_path = "data/new_book.jpg"
+# im = load_image(img_path)
+# out = projective_resize(im, 155, 108, 578, 121, 160, 375, 550, 370) # new_book
+# save_image(out, "proj_resized2")
