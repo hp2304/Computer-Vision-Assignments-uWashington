@@ -2,15 +2,17 @@ from uwimg import *
 # import cv2
 # import matplotlib.pyplot as plt
 
-im = load_image("data/ron.png")
+# im = load_image("data/ron.png")
+im = load_image("data/new_board.jpg")
+findLines(im, 0.4)
 # out = get_lbph_features(im, 1, 8, 8)
 # save_image(out.lbp_im, "lbp")
 
-res = bilinear_resize(im, 300, 600)
-out = get_hog_features(res)
-print(out.n)
-for i in range(out.n):
-    print(out.data[i])
+# res = bilinear_resize(im, 300, 600)
+# out = get_hog_features(res)
+# print(out.n)
+# for i in range(out.n):
+#     print(out.data[i])
 
 # img_path = "data/new_board.jpg"
 # img = cv2.imread(img_path)

@@ -101,3 +101,43 @@ hog_out get_hog_features(image im){
     free(grad_info);
     return hog_features;
 }
+
+
+void findLines(image inp, double edgeThr){
+    image *sobel = sobel_image(inp);
+    int grid_width = 360;
+    int min_dim = inp.h <= inp.w ? inp.h : inp.w;
+    int grid_height = 2*min_dim + 1;
+    image hough_acc = make_image(grid_width, grid_height, 1);
+    for(int i=0; i<inp.w; ++i){
+        for(int j=0; j<inp.h; ++j){
+            double mag = get_pixel(sobel[0], i, j, 0);
+            double theta = get_pixel(sobel[1], i, j, 0)*(180/M_PI);
+            if(mag > edgeThr){
+                int d = (int)(i*cos(theta) + j*sin(theta));
+                if(abs(d) > min_dim)
+                    continue;
+                set_pixel(hough_acc, (int)(theta + 180) % 360, d + min_dim, 0, 
+                    get_pixel(hough_acc, (int)(theta + 180) % 360, d + min_dim, 0) + mag);
+            }
+        }
+    }
+    double max_votes = 0, theta = 0, d = 0;
+    for(int x=0; x<hough_acc.w; ++x){
+        for(int y=0; y<hough_acc.h; ++y){
+            double votes = get_pixel(hough_acc, x, y, 0);
+            if(votes > max_votes){
+                max_votes = votes;
+                theta = x - 180;
+                d = y - min_dim;
+            }
+        }
+    }
+    free_image(hough_acc);
+    free_image(sobel[0]);
+    free_image(sobel[1]);
+    free(sobel);
+    printf("max votes: %lf , theta: %lf, d: %lf\n", max_votes, theta, d);
+    printf("%lf = x%lf + y%lf\n", d, cos(theta), sin(theta));
+
+}

@@ -125,6 +125,7 @@ void draw_flow(image im, image v, float scale);
 // Feature extraction
 lbph_out get_lbph_features(image im, float radius, int grid_x, int grid_y);
 hog_out get_hog_features(image im);
+void findLines(image im, double thr);
 
 #ifndef __cplusplus
     #ifdef OPENCV
