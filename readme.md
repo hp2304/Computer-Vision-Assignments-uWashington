@@ -18,6 +18,13 @@ generate this output image
 ![Output image](vision-hw4/proj_resized1.jpg)
 
 * Canny edge detector.
+
+given this input image,
+![Input image](vision-hw4/data/canny.jpg)
+
+output image
+![Output image](vision-hw4/canny.jpg)
+
 * Detcting lines using Hough Transform (in progress).
 ---
 #### Note
