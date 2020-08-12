@@ -2,8 +2,12 @@ from uwimg import *
 # import cv2
 # import matplotlib.pyplot as plt
 
-im = load_image("data/canny.jpg")
-save_image(cannyEdgeDetect(im, 3, 0.8, 0.5), "canny")
+im = load_image("data/new_board.jpg")
+# save_image(cannyEdgeDetect(im, 3, 0.8, 0.5), "canny")
+canny = cannyEdgeDetect(im, 2, 0.8, 0.07)
+save_image(canny, "canny_board")
+save_image(findLines(im, canny, .77), "lines")
+
 # findLines(im, 0.4)
 # out = get_lbph_features(im, 1, 8, 8)
 # save_image(out.lbp_im, "lbp")

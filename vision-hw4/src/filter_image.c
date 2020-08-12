@@ -288,8 +288,7 @@ image *sobel_image(image im)
 image cannyEdgeDetect(image inp, double sigma, double upper_thr, double lower_thr){
     int h = inp.h, w = inp.w;
     assert(upper_thr > lower_thr && upper_thr <= sqrt(2) && upper_thr > 0);
-    image gaussian_filter = make_gaussian_filter(sigma);
-    image smoothed_image = convolve_image(inp, gaussian_filter, 1);
+    image smoothed_image = smooth_image(inp, sigma);
     image canny_img = make_image(w, h, 1);
     image *sobel = sobel_image(smoothed_image);
     for(int x=0; x<w; ++x){
@@ -358,7 +357,6 @@ image cannyEdgeDetect(image inp, double sigma, double upper_thr, double lower_th
             }
         }
     }
-    free_image(gaussian_filter);
     free_image(smoothed_image);
     free_image(sobel[0]);
     free_image(sobel[1]);

@@ -246,8 +246,8 @@ get_hog_features.argtypes = [IMAGE]
 get_hog_features.restype = HOG_OUT
 
 findLines = lib.findLines
-findLines.argtypes = [IMAGE, c_double]
-findLines.restype = None
+findLines.argtypes = [IMAGE, IMAGE, c_double]
+findLines.restype = IMAGE
 
 def panorama_image(a, b, sigma=2, thresh=5, nms=3, inlier_thresh=2, iters=10000, cutoff=30):
     return panorama_image_lib(a, b, sigma, thresh, nms, inlier_thresh, iters, cutoff)

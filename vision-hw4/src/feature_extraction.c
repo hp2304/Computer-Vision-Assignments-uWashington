@@ -4,6 +4,7 @@
 #include <math.h>
 #include <assert.h>
 #include "image.h"
+#include <time.h>
 
 lbph_out get_lbph_features(image im, float radius, int grid_x, int grid_y){
     image gray_im = rgb_to_grayscale(im);
@@ -102,60 +103,76 @@ hog_out get_hog_features(image im){
     return hog_features;
 }
 
+void drawLine(image im, double slope, double c, double r, double g, double b){
+    assert(im.c == 3);
+    int w = im.w, h = im.h;
+    for(int x=0; x<w; ++x){
+        int y = (int)(slope*x + c);
+        if(y <= 0 && y > -h){
+            set_pixel(im, x, -y, 0, r);
+            set_pixel(im, x, -y, 1, g);
+            set_pixel(im, x, -y, 2, b);
+        }
+    }
+    for(int y=0; y<h; ++y){
+        int x = (int)((-y - c)/slope);
+        if(x >= 0 && x < w){
+            set_pixel(im, x, y, 0, r);
+            set_pixel(im, x, y, 1, g);
+            set_pixel(im, x, y, 2, b);
+        }
+    }
+}
 
-void findLines(image inp, double edgeThr){
+image findLines(image inp, image canny_edge_inp, double maxvote_thr){
     image *sobel = sobel_image(inp);
     int grid_width = 360;
-    int min_dim = inp.h <= inp.w ? inp.h : inp.w;
+    int min_dim = (int)sqrt(pow(inp.w, 2) + pow(inp.h, 2));
     int grid_height = 2*min_dim + 1;
     image hough_acc = make_image(grid_width, grid_height, 1);
     for(int i=0; i<inp.w; ++i){
         for(int j=0; j<inp.h; ++j){
             double mag = get_pixel(sobel[0], i, j, 0);
-            double theta = get_pixel(sobel[1], i, j, 0)*(180/M_PI);
-            if(mag > edgeThr){
-                int d = (int)(i*cos(theta) + j*sin(theta));
+            double theta = get_pixel(sobel[1], i, j, 0);
+            if(get_pixel(canny_edge_inp, i, j, 0) == 1.){
+                int d = -(int)(i*cos(theta) + j*sin(theta));
                 if(abs(d) > min_dim)
                     continue;
-                set_pixel(hough_acc, (int)(theta + 180) % 360, d + min_dim, 0, 
-                    get_pixel(hough_acc, (int)(theta + 180) % 360, d + min_dim, 0) + mag);
+                set_pixel(hough_acc, (int)(theta*(180/M_PI) + 180), d + min_dim, 0, 
+                    get_pixel(hough_acc, (int)(theta*(180/M_PI) + 180), d + min_dim, 0) + mag);
             }
         }
     }
-    double max_votes = 0, theta = 0, d = 0;
+    // image hough_acc_smoothed = smooth_image(hough_acc, 1);
+    // free(hough_acc.data);
+    // hough_acc.data = hough_acc_smoothed.data;
+
+    double max_votes = 0;
     for(int x=0; x<hough_acc.w; ++x){
         for(int y=0; y<hough_acc.h; ++y){
             double votes = get_pixel(hough_acc, x, y, 0);
-            if(votes > max_votes){
+            if(votes > max_votes)
                 max_votes = votes;
-                theta = x - 180;
-                d = y - min_dim;
+        }
+    }
+
+    double vote_thr = maxvote_thr*max_votes;
+    image inp_copy = copy_image(inp);
+    srand(time(0));
+    for(int x=0; x<hough_acc.w; ++x){
+        for(int y=0; y<hough_acc.h; ++y){
+            double votes = get_pixel(hough_acc, x, y, 0);
+            if(votes > vote_thr){
+                double angle = (x-180)*(M_PI/180);
+                drawLine(inp_copy, 1/tan(angle), (y-min_dim)/sin(angle),
+                 (double)(rand()%100) / 99., (double)(rand()%100) / 99., (double)(rand()%100) / 99.);
             }
         }
     }
+    
     free_image(hough_acc);
     free_image(sobel[0]);
     free_image(sobel[1]);
     free(sobel);
-    printf("max votes: %lf , theta: %lf, d: %lf\n", max_votes, theta, d);
-    printf("%lf = x%lf + y%lf\n", d, cos(theta), sin(theta));
-    int p2_x, p1_y;
-    p2_x = (int)(d/cos(theta));
-    p1_y = (int)(-d/sin(theta));
-    printf("p2_x: %d\n", p2_x);
-    for(int x=0; x<=6; ++x){
-        for(int y=p1_y-6; y<=(p1_y+6); ++y){
-            set_pixel(inp, x, y, 0, 0);
-            set_pixel(inp, x, y, 1, 0);
-            set_pixel(inp, x, y, 2, 1);
-        }
-    }
-    for(int y=0; y<=6; ++y){
-        for(int x=p2_x-6; x<=(p2_x+6); ++x){
-            set_pixel(inp, x, y, 0, 0);
-            set_pixel(inp, x, y, 1, 0);
-            set_pixel(inp, x, y, 2, 1);
-        }
-    }
-    save_image(inp, "out");
+    return inp_copy;
 }
