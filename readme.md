@@ -20,11 +20,11 @@ generate this output image
 * Canny edge detection,
 
 given this input image,
+
 ![Input image](vision-hw4/data/canny.jpg)
-
 output image
-![Output image](vision-hw4/canny.jpg)
 
+![Output image](vision-hw4/canny.jpg)
 * Detcting lines using Hough Transform (in progress).
 
 
