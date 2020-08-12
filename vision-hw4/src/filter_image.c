@@ -285,6 +285,87 @@ image *sobel_image(image im)
     return sobel;
 }
 
+image cannyEdgeDetect(image inp, double sigma, double upper_thr, double lower_thr){
+    int h = inp.h, w = inp.w;
+    assert(upper_thr > lower_thr && upper_thr <= sqrt(2) && upper_thr > 0);
+    image gaussian_filter = make_gaussian_filter(sigma);
+    image smoothed_image = convolve_image(inp, gaussian_filter, 1);
+    image canny_img = make_image(w, h, 1);
+    image *sobel = sobel_image(smoothed_image);
+    for(int x=0; x<w; ++x){
+        for(int y=0; y<h; ++y){
+            double angle = get_pixel(sobel[1], x, y, 0);
+            double mag = get_pixel(sobel[0], x, y, 0);
+            if(angle < 0)
+                angle += M_PI;
+            if((M_PI/8) >= angle && angle < (3*M_PI/8)){
+                if(mag > get_pixel(sobel[0], x+1, y-1, 0)
+                 && mag > get_pixel(sobel[0], x-1, y+1, 0)){
+                        set_pixel(canny_img, x, y, 0, mag);
+                    }
+            }
+            else if(angle >= (3*M_PI/8) && angle < (5*M_PI/8)){
+                if(mag > get_pixel(sobel[0], x, y-1, 0)
+                 && mag > get_pixel(sobel[0], x, y+1, 0)){
+                        set_pixel(canny_img, x, y, 0, mag);
+                    }
+            }
+            else if(angle >= (5*M_PI/8) && angle < (7*M_PI/8)){
+                if(mag > get_pixel(sobel[0], x-1, y-1, 0)
+                 && mag > get_pixel(sobel[0], x+1, y+1, 0)){
+                        set_pixel(canny_img, x, y, 0, mag);
+                    }
+            }
+            else{
+                if(mag > get_pixel(sobel[0], x+1, y, 0)
+                 && mag > get_pixel(sobel[0], x-1, y, 0)){
+                        set_pixel(canny_img, x, y, 0, mag);
+                    }
+            }
+        }
+    }
+    for(int x=0; x<w; ++x){
+        for(int y=0; y<h; ++y){
+            double val = get_pixel(canny_img, x, y, 0);
+            if(val > upper_thr)
+                set_pixel(canny_img, x, y, 0, 1);
+            else if(val < lower_thr)
+                set_pixel(canny_img, x, y, 0, 0);
+            else
+                set_pixel(canny_img, x, y, 0, -1);
+        }
+    }
+    for(int x=0; x<w; ++x){
+        for(int y=0; y<h; ++y){
+            double val = get_pixel(canny_img, x, y, 0);
+            if(val == -1){
+                int flag = 0;
+                for(int i=x-1; i<=x+1; ++i){
+                    for(int j=y-1; j<=y+1; ++j){
+                        if(j >= 0 && j < h && i >= 0 && i < w && i != x && j != y){
+                            if(get_pixel(canny_img, i, j, 0) == 1){
+                                flag = 1;
+                                set_pixel(canny_img, x, y, 0, 1);
+                                break;
+                            }
+                        }
+                    }
+                    if(flag)
+                        break;
+                }
+                if(!flag)
+                    set_pixel(canny_img, x, y, 0, 0);
+            }
+        }
+    }
+    free_image(gaussian_filter);
+    free_image(smoothed_image);
+    free_image(sobel[0]);
+    free_image(sobel[1]);
+    free(sobel);
+    return canny_img;
+}
+
 image colorize_sobel(image im)
 {
     // TODO

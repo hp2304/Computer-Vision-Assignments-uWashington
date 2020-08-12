@@ -2,9 +2,9 @@ from uwimg import *
 # import cv2
 # import matplotlib.pyplot as plt
 
-# im = load_image("data/ron.png")
-im = load_image("data/new_board.jpg")
-findLines(im, 0.4)
+im = load_image("data/canny.jpg")
+save_image(cannyEdgeDetect(im, 3, 0.8, 0.5), "canny")
+# findLines(im, 0.4)
 # out = get_lbph_features(im, 1, 8, 8)
 # save_image(out.lbp_im, "lbp")
 

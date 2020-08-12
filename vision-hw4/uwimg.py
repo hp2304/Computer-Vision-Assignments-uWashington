@@ -177,6 +177,10 @@ sobel_image = lib.sobel_image
 sobel_image.argtypes = [IMAGE]
 sobel_image.restype = POINTER(IMAGE)
 
+cannyEdgeDetect = lib.cannyEdgeDetect
+cannyEdgeDetect.argtypes = [IMAGE, c_double, c_double, c_double]
+cannyEdgeDetect.restype = IMAGE
+
 colorize_sobel = lib.colorize_sobel
 colorize_sobel.argtypes = [IMAGE]
 colorize_sobel.restype = IMAGE

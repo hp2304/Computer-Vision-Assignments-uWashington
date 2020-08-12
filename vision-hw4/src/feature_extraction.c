@@ -139,5 +139,23 @@ void findLines(image inp, double edgeThr){
     free(sobel);
     printf("max votes: %lf , theta: %lf, d: %lf\n", max_votes, theta, d);
     printf("%lf = x%lf + y%lf\n", d, cos(theta), sin(theta));
-
+    int p2_x, p1_y;
+    p2_x = (int)(d/cos(theta));
+    p1_y = (int)(-d/sin(theta));
+    printf("p2_x: %d\n", p2_x);
+    for(int x=0; x<=6; ++x){
+        for(int y=p1_y-6; y<=(p1_y+6); ++y){
+            set_pixel(inp, x, y, 0, 0);
+            set_pixel(inp, x, y, 1, 0);
+            set_pixel(inp, x, y, 2, 1);
+        }
+    }
+    for(int y=0; y<=6; ++y){
+        for(int x=p2_x-6; x<=(p2_x+6); ++x){
+            set_pixel(inp, x, y, 0, 0);
+            set_pixel(inp, x, y, 1, 0);
+            set_pixel(inp, x, y, 2, 1);
+        }
+    }
+    save_image(inp, "out");
 }
