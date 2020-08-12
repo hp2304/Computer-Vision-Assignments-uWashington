@@ -25,7 +25,7 @@ generate this output image
 
 * Detecting lines using Hough Transform (input image, Edge detected image, output image).
 
-![Input image](vision-hw4/data/new_board.jpg)
+![Input image](vision-hw4/data/tower.jpg)
 
 ![Canny edge image](vision-hw4/canny_board.jpg)
 
