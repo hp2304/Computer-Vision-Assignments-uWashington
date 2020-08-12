@@ -17,14 +17,12 @@ given this input image and four corner point coordinates,
 generate this output image
 ![Output image](vision-hw4/proj_resized1.jpg)
 
-* Canny edge detection,
-
-given this input image,
+* Canny edge detection (shown in below figures, input image then output image),
 
 ![Input image](vision-hw4/data/canny.jpg)
-output image
 
 ![Output image](vision-hw4/canny.jpg)
+
 * Detcting lines using Hough Transform (in progress).
 
 
