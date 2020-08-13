@@ -127,6 +127,12 @@ void draw_flow(image im, image v, float scale);
 lbph_out get_lbph_features(image im, float radius, int grid_x, int grid_y);
 hog_out get_hog_features(image im);
 image findLines(image inp, image canny_edge_inp, double maxvote_thr);
+image findCircles(image inp, image canny_edge_inp, double maxvote_thr, int min_r, int max_r);
+
+
+// Drawing
+void drawLine(image im, double slope, double c, double r, double g, double b);
+void drawCircle(image im, point center, double radius, double r, double g, double b);
 
 #ifndef __cplusplus
     #ifdef OPENCV

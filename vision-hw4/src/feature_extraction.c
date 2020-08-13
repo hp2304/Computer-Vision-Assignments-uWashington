@@ -103,28 +103,8 @@ hog_out get_hog_features(image im){
     return hog_features;
 }
 
-void drawLine(image im, double slope, double c, double r, double g, double b){
-    assert(im.c == 3);
-    int w = im.w, h = im.h;
-    for(int x=0; x<w; ++x){
-        int y = (int)(slope*x + c);
-        if(y <= 0 && y > -h){
-            set_pixel(im, x, -y, 0, r);
-            set_pixel(im, x, -y, 1, g);
-            set_pixel(im, x, -y, 2, b);
-        }
-    }
-    for(int y=0; y<h; ++y){
-        int x = (int)((-y - c)/slope);
-        if(x >= 0 && x < w){
-            set_pixel(im, x, y, 0, r);
-            set_pixel(im, x, y, 1, g);
-            set_pixel(im, x, y, 2, b);
-        }
-    }
-}
-
 image findLines(image inp, image canny_edge_inp, double maxvote_thr){
+    assert(maxvote_thr > 0 && maxvote_thr <= 1);
     image *sobel = sobel_image(inp);
     int grid_width = 360;
     int min_dim = (int)sqrt(pow(inp.w, 2) + pow(inp.h, 2));
@@ -170,6 +150,64 @@ image findLines(image inp, image canny_edge_inp, double maxvote_thr){
         }
     }
     
+    free_image(hough_acc);
+    free_image(sobel[0]);
+    free_image(sobel[1]);
+    free(sobel);
+    return inp_copy;
+}
+
+image findCircles(image inp, image canny_edge_inp, double maxvote_thr, int min_r, int max_r){
+    assert(max_r > min_r && max_r > 0);
+    assert(maxvote_thr > 0 && maxvote_thr <= 1);
+    image *sobel = sobel_image(inp);
+    
+    image hough_acc = make_image(inp.w, inp.h, max_r - min_r + 1);
+    for(int i=0; i<inp.w; ++i){
+        for(int j=0; j<inp.h; ++j){
+            double mag = get_pixel(sobel[0], i, j, 0);
+            double theta = get_pixel(sobel[1], i, j, 0);
+            if(get_pixel(canny_edge_inp, i, j, 0) == 1.){
+                for(int r = min_r; r <= max_r; ++r){
+                    int x = i + r*cos(theta), y = j + r*sin(theta);
+                    set_pixel(hough_acc, x, y, r-min_r, mag + get_pixel(hough_acc, x, y, r-min_r));
+                    x = i + r*cos(theta + M_PI);
+                    y = j + r*sin(theta + M_PI);
+                    set_pixel(hough_acc, x, y, r-min_r, mag + get_pixel(hough_acc, x, y, r-min_r));
+                }
+            }
+        }
+    }
+
+    double max_votes = 0;
+    for(int x=0; x<hough_acc.w; ++x){
+        for(int y=0; y<hough_acc.h; ++y){
+            for(int c=0; c<hough_acc.c; ++c){
+                double votes = get_pixel(hough_acc, x, y, c);
+                if(votes > max_votes)
+                    max_votes = votes;
+            }
+        }
+    }
+
+    double vote_thr = maxvote_thr*max_votes;
+    image inp_copy = copy_image(inp);
+    srand(time(0));
+
+    for(int x=0; x<hough_acc.w; ++x){
+        for(int y=0; y<hough_acc.h; ++y){
+            for(int c=0; c<hough_acc.c; ++c){
+                double votes = get_pixel(hough_acc, x, y, c);
+                if(votes > vote_thr){
+                    point center;
+                    center.x = x;
+                    center.y = y;
+                    drawCircle(inp_copy, center, c+min_r,
+                 (double)(rand()%100) / 99., (double)(rand()%100) / 99., (double)(rand()%100) / 99.);
+                }
+            }
+        }
+    }
     free_image(hough_acc);
     free_image(sobel[0]);
     free_image(sobel[1]);

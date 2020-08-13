@@ -23,13 +23,21 @@ generate this output image
 
 ![Output image](vision-hw4/canny.jpg)
 
-* Detecting lines using Hough Transform (input image, Edge detected image, output image).
+* Detecting lines using Hough Transform (input image, edge detected image, output image).
 
 ![Input image](vision-hw4/data/tower.jpg)
 
 ![Canny edge image](vision-hw4/canny_board.jpg)
 
 ![Canny edge image](vision-hw4/lines.jpg)
+
+* Detecting circles using Hough Transform (input image, edge detected image, output image).
+
+![Input image](vision-hw4/data/coins.jpg)
+
+![Canny edge image](vision-hw4/canny_coins.jpg)
+
+![Canny edge image](vision-hw4/circles.jpg)
 
 
 ---

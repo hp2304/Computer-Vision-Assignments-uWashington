@@ -2,7 +2,7 @@ OPENCV=0
 OPENMP=0
 DEBUG=0
 
-OBJ=load_image.o process_image.o args.o filter_image.o resize_image.o test.o harris_image.o matrix.o panorama_image.o flow_image.o list.o data.o classifier.o feature_extraction.o
+OBJ=load_image.o process_image.o args.o filter_image.o resize_image.o test.o harris_image.o matrix.o panorama_image.o flow_image.o list.o data.o classifier.o feature_extraction.o drawing.o
 EXOBJ=main.o
 
 VPATH=./src/:./

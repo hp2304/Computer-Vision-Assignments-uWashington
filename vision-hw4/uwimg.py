@@ -249,6 +249,10 @@ findLines = lib.findLines
 findLines.argtypes = [IMAGE, IMAGE, c_double]
 findLines.restype = IMAGE
 
+findCircles = lib.findCircles
+findCircles.argtypes = [IMAGE, IMAGE, c_double, c_int, c_int]
+findCircles.restype = IMAGE
+
 def panorama_image(a, b, sigma=2, thresh=5, nms=3, inlier_thresh=2, iters=10000, cutoff=30):
     return panorama_image_lib(a, b, sigma, thresh, nms, inlier_thresh, iters, cutoff)
 
