@@ -25,11 +25,11 @@ void drawLine(image im, double slope, double c, double r, double g, double b){
 
 void drawCircle(image im, point center, double radius, double r, double g, double b){
     assert(im.c == 3);
-    double step_size = 1/(10*r);
-    for(double theta = 0; theta < 360; theta += step_size){
-        double angle_rad = theta*(M_PI/180);
-        int x = (int)(center.x + radius*cos(angle_rad));
-        int y = (int)(center.y + radius*sin(angle_rad));
+    center.y = -center.y;
+    double step_size = M_PI/(100*r*180);
+    for(double theta = 0; theta <= (2*M_PI); theta += step_size){
+        int x = (int)(center.x + radius*cos(theta));
+        int y = -(int)(center.y + radius*sin(theta));
         set_pixel(im, x, y, 0, r);
         set_pixel(im, x, y, 1, g);
         set_pixel(im, x, y, 2, b);
