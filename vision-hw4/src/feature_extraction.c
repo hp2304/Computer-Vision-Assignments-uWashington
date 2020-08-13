@@ -54,7 +54,8 @@ hog_out get_hog_features(image im){
         printf("Invalid aspect ratio. It must be 1:2 (width:height)");
         return none;
     }
-    image inp = bilinear_resize(convolve_image(im, make_gaussian_filter(2), 1), 64, 128);
+    image blurred_im = smooth_image(im, 2);
+    image inp = bilinear_resize(blurred_im, 64, 128);
     image *grad_info = sobel_image(inp);
     float *cell_hists[16][8];
     for(int j=0; j<inp.h; j += 8){
@@ -100,6 +101,8 @@ hog_out get_hog_features(image im){
     free_image(grad_info[0]);
     free_image(grad_info[1]);
     free(grad_info);
+    free_image(inp);
+    free_image(blurred_im);
     return hog_features;
 }
 

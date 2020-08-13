@@ -119,24 +119,23 @@ image make_1d_gaussian(float sigma)
 // returns: smoothed image.
 image smooth_image(image im, float sigma)
 {
-    if(1){
-        image g = make_gaussian_filter(sigma);
-        image s = convolve_image(im, g, 1);
-        free_image(g);
-        return s;
-    }
+    // if(1){
+    //     image g = make_gaussian_filter(sigma);
+    //     image s = convolve_image(im, g, 1);
+    //     free_image(g);
+    //     return s;
+    // }
     // else {
         // TODO: optional, use two convolutions with 1d gaussian filter.
         // If you implement, disable the above if check.
-    // image filter = make_1d_gaussian(sigma);
-    // image mid = convolve_image(im, filter, 1);
-    // free_image(im);
-    // int s = filter.w;
-    // filter.w = filter.h;
-    // filter.h = s;
-    // image filtered_image = convolve_image(mid, filter, 1);
-    // free_image(mid);
-    // return filtered_image;
+    image filter = make_1d_gaussian(sigma);
+    image mid = convolve_image(im, filter, 1);
+    filter.w = filter.h;
+    filter.h = 1;
+    image filtered_image = convolve_image(mid, filter, 1);
+    free_image(mid);
+    free_image(filter);
+    return filtered_image;
 }
 // Calculate the structure matrix of an image.
 // image im: the input image.

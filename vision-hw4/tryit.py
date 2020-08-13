@@ -1,12 +1,19 @@
 from uwimg import *
+import time
 # import cv2
 # import matplotlib.pyplot as plt
 
-im = load_image("data/coins.jpg")
-# save_image(cannyEdgeDetect(im, 3, 0.8, 0.5), "canny")
-canny = cannyEdgeDetect(im, 1, 0.7, 0.07)
-save_image(canny, "canny_coins")
-save_image(findCircles(im, canny, .5, 20, 100), "circles")
+im = load_image("data/canny.jpg")
+
+save_image(cannyEdgeDetect(im, 3, 0.8, 0.5), "canny")
+
+# canny = cannyEdgeDetect(im, 1, 0.7, 0.07)
+# save_image(canny, "canny_board")
+# save_image(findLines(im, canny, .25), "lines")
+
+# canny = cannyEdgeDetect(im, 2, 0.7, 0.07)
+# save_image(canny, "canny_coins")
+# save_image(findCircles(im, canny, .5, 15, 80), "circles")
 
 # findLines(im, 0.4)
 # out = get_lbph_features(im, 1, 8, 8)

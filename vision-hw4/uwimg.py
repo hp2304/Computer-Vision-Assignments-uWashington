@@ -189,6 +189,10 @@ make_gaussian_filter = lib.make_gaussian_filter
 make_gaussian_filter.argtypes = [c_float]
 make_gaussian_filter.restype = IMAGE
 
+smooth_image = lib.smooth_image
+smooth_image.argtypes = [IMAGE, c_float]
+smooth_image.restype = IMAGE
+
 convolve_image = lib.convolve_image
 convolve_image.argtypes = [IMAGE, IMAGE, c_int]
 convolve_image.restype = IMAGE
