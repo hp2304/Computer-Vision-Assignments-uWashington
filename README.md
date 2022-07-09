@@ -71,7 +71,7 @@ I have extended this library to include the following. Below features are added 
    
 
 
-4. Implement **Canny edge detector** (shown in below figures, input image then output image),
+4. Implement **Canny edge detector**.
 
     | Input Image | Output |
     |-|-|
